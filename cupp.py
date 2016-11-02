@@ -41,6 +41,7 @@ import ConfigParser
 import urllib
 import gzip
 import csv
+import time
 
 
 # Reading configuration file...
@@ -59,7 +60,7 @@ wcto = config.getint('nums','wcto')
 threshold = config.getint('nums','threshold')
 
 # 1337 mode configs, well you can add more lines if you add it to config file too.
-# You will need to add more lines in two places in cupp.py code as well...
+# You will need to add more lines in quite few places in cupp.py code as well...
 a = config.get('leet','a')
 i = config.get('leet','i')
 e = config.get('leet','e')
@@ -69,9 +70,138 @@ s = config.get('leet','s')
 g = config.get('leet','g')
 z = config.get('leet','z')
 
+leetchars = set("aietosgz") # remember to modify if you add/remove leet chars
+
+# Basic leetspeaking...
+def basic_leet(word):
+	tmp = word
+	x = word
+	leetlist = []
+
+	x = tmp
+	# leet only the first occurrence of certain leet character
+	x = x.replace('a',a, 1)
+	leetlist.append(x)
+	x = tmp
+	x = x.replace('i',i, 1)
+	leetlist.append(x)
+	x = tmp
+	x = x.replace('e',e, 1)
+	leetlist.append(x)
+	x = tmp
+	x = x.replace('t',t, 1)
+	leetlist.append(x)
+	x = tmp
+	x = x.replace('o',o, 1)
+	leetlist.append(x)
+	x = tmp
+	x = x.replace('s',s, 1)
+	leetlist.append(x)
+	x = tmp
+	x = x.replace('g',g, 1)
+	leetlist.append(x)
+	x = tmp
+	x = x.replace('z',z, 1)
+	leetlist.append(x)
+		
+	# leet only the last occurrence of certain leet character
+	x = tmp
+	x = x[:x.rfind("a")] + a
+	leetlist.append(x)
+	x = tmp
+	x = x[:x.rfind("i")] + i
+	leetlist.append(x)
+	x = tmp
+	x = x[:x.rfind("e")] + e
+	leetlist.append(x)
+	x = tmp
+	x = x[:x.rfind("t")] + t
+	leetlist.append(x)
+	x = tmp
+	x = x[:x.rfind("o")] + o
+	leetlist.append(x)
+	x = tmp
+	x = x[:x.rfind("s")] + s
+	leetlist.append(x)
+	x = tmp
+	x = x[:x.rfind("g")] + g
+	leetlist.append(x)
+	x = tmp
+	x = x[:x.rfind("z")] + z
+	leetlist.append(x)			
+
+	# leet all leet characters
+	x = tmp
+	x = x.replace('a',a)
+	x = x.replace('i',i)
+	x = x.replace('e',e)
+	x = x.replace('t',t)
+	x = x.replace('o',o)
+	x = x.replace('s',s)
+	x = x.replace('g',g)
+	x = x.replace('z',z)
+	leetlist.append(x)
+	
+	leetlist = list(set(leetlist))
+	return leetlist
+
+
+
+# Perhaps a bit more "advanced" leetspeaking...
+def more_leet(word, character, replacement):
+	tmp = word
+	c = str(character)
+	r = replacement
+	leetlist = []
+	
+	x = tmp
+	for i in xrange(len(x)):
+		k = x.rfind(c, 0, i)
+		if k >= 0:
+			x = x[:k] + r + x[k+1:]
+			leetlist.append(x)
+
+	x = tmp
+	for i in xrange(len(x)):
+		k = x.rfind(c, 0, i)
+		if k >= 0:
+			foo = x[:k] + r + x[k+1:]
+			leetlist.append(foo)			
+
+	x = tmp
+	for i in xrange(len(x)):
+		k = x.rfind(c, i, len(x))
+		if k >= 0:
+			x = x[:k] + r + x[k+1:]
+			leetlist.append(x)			
+
+	x = tmp
+	for i in xrange(len(x)):
+		k = x.rfind(c, 1, len(x)-1)
+		if k >= 0:
+			x = x[:k] + r + x[k+1:]
+			leetlist.append(x)			
+			
+	x = tmp
+	for i in xrange(len(x)):
+		k = x.rfind(c, 2, len(x)-2)
+		if k >= 0:
+			x = x[:k] + r + x[k+1:]
+			leetlist.append(x)						
+
+	x = tmp
+	for i in xrange(len(x)):
+		k = x.rfind(c, 3, len(x)-3)
+		if k >= 0:
+			x = x[:k] + r + x[k+1:]
+			leetlist.append(x)	
+	
+	leetlist = list(set(leetlist))
+	return leetlist
+
+
 
 # for concatenations...
-
 def concats(seq, start, stop):
 	for mystr in seq:
 		for num in xrange(start, stop):
@@ -79,14 +209,13 @@ def concats(seq, start, stop):
 
 
 # for sorting and making combinations...
-
 def komb(seq, start, special = ""):
 	for mystr in seq:
 		for mystr1 in start:
 			yield mystr + special + mystr1
 
-# print list to file counting words
 
+# print list to file counting words
 def print_to_file(filename, unique_list_finished):
 	f = open ( filename, 'w' )
 	unique_list_finished.sort()
@@ -98,6 +227,8 @@ def print_to_file(filename, unique_list_finished):
 	f.close()
 	print "[+] Saving dictionary to \033[1;31m"+filename+"\033[1;m, counting \033[1;31m"+str(lines)+" words.\033[1;m"
 	print "[+] Now load your pistolero with \033[1;31m"+filename+"\033[1;m and shoot! Good luck!"
+
+
 
 if len(sys.argv) < 2 or sys.argv[1] == '-h':
 	print " ___________ "
@@ -217,17 +348,21 @@ elif sys.argv[1] == '-w':
 
 	unique_lista = dict.fromkeys(uniqlist).keys()
 	unique_leet = []
+
 	if leetmode == "y":
-		for x in unique_lista: # if you want to add more leet chars, you will need to add more lines in cupp.cfg too...
-			x = x.replace('a',a)
-			x = x.replace('i',i)
-			x = x.replace('e',e)
-			x = x.replace('t',t)
-			x = x.replace('o',o)
-			x = x.replace('s',s)
-			x = x.replace('g',g)
-			x = x.replace('z',z)
-			unique_leet.append(x)
+		for x in unique_lista: 
+			if any((lc in leetchars) for lc in x):
+				# basic leetspeaking (contains the original one also)
+				unique_leet = unique_leet + basic_leet(x)
+				# use "more advanced" leetspeak of certain characters with various ways
+				unique_leet = unique_leet + more_leet(x, 'a', a)
+				unique_leet = unique_leet + more_leet(x, 'i', i)
+				unique_leet = unique_leet + more_leet(x, 'e', e)
+				unique_leet = unique_leet + more_leet(x, 't', t)
+				unique_leet = unique_leet + more_leet(x, 'o', o)
+				unique_leet = unique_leet + more_leet(x, 's', s)
+				unique_leet = unique_leet + more_leet(x, 'g', g)
+				unique_leet = unique_leet + more_leet(x, 'z', z)				
 
 	unique_list = unique_lista + unique_leet
 
@@ -290,7 +425,7 @@ elif sys.argv[1] == '-i':
 	words1 = raw_input("> Do you want to add some key words about the victim? Y/[N]: ").lower()
 	words2 = ""
 	if words1 == "y":
-		words2 = raw_input("> Please enter the words, separated by comma. [i.e. hacker,juice,black], spaces will be removed: ").replace(" ","")
+		words2 = raw_input("> Please enter the words or patterns, separated by comma. [i.e. hacker,juice,black], spaces will be removed: ").replace(" ","")
 	words = words2.split(",")
 
 	spechars = ['']
@@ -549,27 +684,32 @@ elif sys.argv[1] == '-i':
 
 	unique_lista = dict.fromkeys(uniqlist).keys()
 	unique_leet = []
+	
 	if leetmode == "y":
-		for x in unique_lista: # if you want to add more leet chars, you will need to add more lines in cupp.cfg too...
-			x = x.replace('a',a)
-			x = x.replace('i',i)
-			x = x.replace('e',e)
-			x = x.replace('t',t)
-			x = x.replace('o',o)
-			x = x.replace('s',s)
-			x = x.replace('g',g)
-			x = x.replace('z',z)
-			unique_leet.append(x)
-
+		for x in unique_lista: 
+			if any((lc in leetchars) for lc in x):
+				# basic leetspeaking (contains the original one also)
+				unique_leet = unique_leet + basic_leet(x)
+				# use "more advanced" leetspeak of certain characters with various ways
+				unique_leet = unique_leet + more_leet(x, 'a', a)
+				unique_leet = unique_leet + more_leet(x, 'i', i)
+				unique_leet = unique_leet + more_leet(x, 'e', e)
+				unique_leet = unique_leet + more_leet(x, 't', t)
+				unique_leet = unique_leet + more_leet(x, 'o', o)
+				unique_leet = unique_leet + more_leet(x, 's', s)
+				unique_leet = unique_leet + more_leet(x, 'g', g)
+				unique_leet = unique_leet + more_leet(x, 'z', z)				
+	
+	unique_leet = list(set(unique_leet))
 	unique_list = unique_lista + unique_leet
 
 	unique_list_finished = []
 	unique_list_finished = [x for x in unique_list if len(x) < wcto and len(x) > wcfrom]
-
+	
 	print_to_file(name+'.txt', unique_list_finished)
 	exit()
-
-
+	
+	
 elif sys.argv[1] == '-a':
 	url = config.get('alecto','alectourl')
 
