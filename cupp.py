@@ -72,13 +72,34 @@ z = config.get('leet','z')
 
 leetchars = set("aietosgz") # remember to modify if you add/remove leet chars
 
-# Basic leetspeaking...
+# Basic leetspeaking for all chars...
 def basic_leet(word):
-	tmp = word
 	x = word
 	leetlist = []
 
+	# leet all leet characters
+	x = x.replace('a',a)
+	x = x.replace('i',i)
+	x = x.replace('e',e)
+	x = x.replace('t',t)
+	x = x.replace('o',o)
+	x = x.replace('s',s)
+	x = x.replace('g',g)
+	x = x.replace('z',z)
+	leetlist.append(x)
+	
+	#leetlist = list(set(leetlist))
+	return leetlist
+
+
+# Some more. Not used atm...
+# Warning: Slows down generation a lot!
+#          Use only for small set of passwords!!!
+def medium_leet(word):
+	tmp = word
 	x = tmp
+	leetlist = []
+
 	# leet only the first occurrence of certain leet character
 	x = x.replace('a',a, 1)
 	leetlist.append(x)
@@ -128,26 +149,16 @@ def basic_leet(word):
 	leetlist.append(x)
 	x = tmp
 	x = x[:x.rfind("z")] + z
-	leetlist.append(x)			
 
-	# leet all leet characters
-	x = tmp
-	x = x.replace('a',a)
-	x = x.replace('i',i)
-	x = x.replace('e',e)
-	x = x.replace('t',t)
-	x = x.replace('o',o)
-	x = x.replace('s',s)
-	x = x.replace('g',g)
-	x = x.replace('z',z)
-	leetlist.append(x)
-	
-	leetlist = list(set(leetlist))
+	leetlist.append(x)			
+	#leetlist = list(set(leetlist))
 	return leetlist
 
 
 
 # Perhaps a bit more "advanced" leetspeaking...
+# Warning: Slows down generation a lot!
+#          Use only for small set of passwords!!!
 def more_leet(word, character, replacement):
 	tmp = word
 	c = str(character)
@@ -196,7 +207,7 @@ def more_leet(word, character, replacement):
 			x = x[:k] + r + x[k+1:]
 			leetlist.append(x)	
 	
-	leetlist = list(set(leetlist))
+	#leetlist = list(set(leetlist))
 	return leetlist
 
 
@@ -312,6 +323,9 @@ elif sys.argv[1] == '-w':
 
 	randnum = raw_input("> Do you want to add some random numbers at the end of words? Y/[N]:").lower()
 	leetmode = raw_input("> Leet mode? (i.e. leet = 1337) Y/[N]: ").lower()
+	if leetmode == "y":
+		print "\033[1;31mWARNING:\033[1;m Select NO in the following if using or going to have huge worlists!"
+		advleet = raw_input("> Do you want to use more advanced leetspeaking (not only password => p455w0rd and P455w0rd)? Y/[N]: ").lower()
 
 
 	kombinacija1 = list(komb(listica, years))
@@ -348,22 +362,30 @@ elif sys.argv[1] == '-w':
 
 	unique_lista = dict.fromkeys(uniqlist).keys()
 	unique_leet = []
+	leet_list = []
 
 	if leetmode == "y":
+		print "[+] Leetspeaking..."	
 		for x in unique_lista: 
-			if any((lc in leetchars) for lc in x):
-				# basic leetspeaking (contains the original one also)
-				unique_leet = unique_leet + basic_leet(x)
-				# use "more advanced" leetspeak of certain characters with various ways
-				unique_leet = unique_leet + more_leet(x, 'a', a)
-				unique_leet = unique_leet + more_leet(x, 'i', i)
-				unique_leet = unique_leet + more_leet(x, 'e', e)
-				unique_leet = unique_leet + more_leet(x, 't', t)
-				unique_leet = unique_leet + more_leet(x, 'o', o)
-				unique_leet = unique_leet + more_leet(x, 's', s)
-				unique_leet = unique_leet + more_leet(x, 'g', g)
-				unique_leet = unique_leet + more_leet(x, 'z', z)				
+			# basic leetspeaking (contains the original one also)
+			leet_list = leet_list + basic_leet(x)
+			if advleet == "y":
+				if any((lc in leetchars) for lc in x):				
+					# medium leet
+					leet_list = leet_list + medium_leet(x)
+					# use "more advanced" leetspeak of certain characters with various ways
+					leet_list = leet_list + more_leet(x, 'a', a)
+					leet_list = leet_list + more_leet(x, 'i', i)
+					leet_list = leet_list + more_leet(x, 'e', e)
+					leet_list = leet_list + more_leet(x, 't', t)
+					leet_list = leet_list + more_leet(x, 'o', o)
+					leet_list = leet_list + more_leet(x, 's', s)
+					leet_list = leet_list + more_leet(x, 'g', g)
+					leet_list = leet_list + more_leet(x, 'z', z)				
 
+		print "[+] Sorting leet list and removing duplicates..."
+		unique_leet = dict.fromkeys(leet_list).keys()
+	
 	unique_list = unique_lista + unique_leet
 
 	unique_list_finished = []
@@ -371,6 +393,9 @@ elif sys.argv[1] == '-w':
 	unique_list_finished = [x for x in unique_list if len(x) > wcfrom and len(x) < wcto]
 
 	print_to_file(sys.argv[2]+'.cupp.txt', unique_list_finished)
+	
+	print "[+] See if there are too many duplicates by using 'sort " + sys.argv[2] + ".cupp.txt | uniq -cd | sort -n'"
+	print "[+] Remove duplicates manually by using 'sort -u " + sys.argv[2] + ".cupp.txt > newfile.txt'"
 
 	fajl.close()
 	exit()
@@ -440,6 +465,9 @@ elif sys.argv[1] == '-i':
 
 	randnum = raw_input("> Do you want to add some random numbers at the end of words? Y/[N]:").lower()
 	leetmode = raw_input("> Leet mode? (i.e. leet = 1337) Y/[N]: ").lower()
+	if leetmode == "y":
+		print "\033[1;31mWARNING:\033[1;m Select NO in the following if using or going to have huge worlists!"
+		advleet = raw_input("> Do you want to use more advanced leetspeaking (not only password => p455w0rd and P455w0rd)? Y/[N]: ").lower()
 
 
 	print "\r\n[+] Now making a dictionary..."
@@ -683,30 +711,41 @@ elif sys.argv[1] == '-i':
 	uniqlist = bdss+wbdss+kbdss+reverse+komb_unique01+komb_unique02+komb_unique03+komb_unique04+komb_unique05+komb_unique1+komb_unique2+komb_unique3+komb_unique4+komb_unique5+komb_unique6+komb_unique7+komb_unique8+komb_unique9+komb_unique10+komb_unique11+komb_unique12+komb_unique13+komb_unique14+komb_unique15+komb_unique16+komb_unique17+komb_unique18+komb_unique19+komb_unique20+komb_unique21+komb_unique07+komb_unique08+komb_unique09+komb_unique010+komb_unique011+komb_unique012
 
 	unique_lista = dict.fromkeys(uniqlist).keys()
-	unique_leet = []
+	unique_list = []
+	leet_list = []
 	
 	if leetmode == "y":
+		print "[+] Leetspeaking..."
 		for x in unique_lista: 
-			if any((lc in leetchars) for lc in x):
-				# basic leetspeaking (contains the original one also)
-				unique_leet = unique_leet + basic_leet(x)
-				# use "more advanced" leetspeak of certain characters with various ways
-				unique_leet = unique_leet + more_leet(x, 'a', a)
-				unique_leet = unique_leet + more_leet(x, 'i', i)
-				unique_leet = unique_leet + more_leet(x, 'e', e)
-				unique_leet = unique_leet + more_leet(x, 't', t)
-				unique_leet = unique_leet + more_leet(x, 'o', o)
-				unique_leet = unique_leet + more_leet(x, 's', s)
-				unique_leet = unique_leet + more_leet(x, 'g', g)
-				unique_leet = unique_leet + more_leet(x, 'z', z)				
+			# basic leetspeaking (contains the original one also)
+			leet_list = leet_list + basic_leet(x)
+			if advleet == "y":
+				if any((lc in leetchars) for lc in x):				
+					# medium leet
+					leet_list = leet_list + medium_leet(x)
+					# use "more advanced" leetspeak of certain characters with various ways
+					leet_list = leet_list + more_leet(x, 'a', a)
+					leet_list = leet_list + more_leet(x, 'i', i)
+					leet_list = leet_list + more_leet(x, 'e', e)
+					leet_list = leet_list + more_leet(x, 't', t)
+					leet_list = leet_list + more_leet(x, 'o', o)
+					leet_list = leet_list + more_leet(x, 's', s)
+					leet_list = leet_list + more_leet(x, 'g', g)
+					leet_list = leet_list + more_leet(x, 'z', z)				
 	
-	unique_leet = list(set(unique_leet))
+		print "[+] Sorting leet list and removing duplicates..."
+		unique_leet = dict.fromkeys(leet_list).keys()
+	
 	unique_list = unique_lista + unique_leet
 
 	unique_list_finished = []
 	unique_list_finished = [x for x in unique_list if len(x) < wcto and len(x) > wcfrom]
 	
 	print_to_file(name+'.txt', unique_list_finished)
+
+	print "[+] See if there are too many duplicates by using 'sort " + name + ".txt | uniq -cd | sort -n'"	
+	print "[+] Remove duplicates manually by using 'sort -u " + name + ".txt > newfile.txt'"
+	
 	exit()
 	
 	
