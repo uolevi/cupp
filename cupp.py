@@ -41,7 +41,6 @@ import ConfigParser
 import urllib
 import gzip
 import csv
-import time
 
 
 # Reading configuration file...
@@ -88,13 +87,12 @@ def basic_leet(word):
 	x = x.replace('z',z)
 	leetlist.append(x)
 	
-	#leetlist = list(set(leetlist))
 	return leetlist
 
 
-# Some more. Not used atm...
-# Warning: Slows down generation a lot!
-#          Use only for small set of passwords!!!
+# Some more leetspeaking
+# WARNING: Slows down generation a lot.
+#          Use only for small wordlists.
 def medium_leet(word):
 	tmp = word
 	x = tmp
@@ -151,14 +149,14 @@ def medium_leet(word):
 	x = x[:x.rfind("z")] + z
 
 	leetlist.append(x)			
-	#leetlist = list(set(leetlist))
+
 	return leetlist
 
 
 
 # Perhaps a bit more "advanced" leetspeaking...
-# Warning: Slows down generation a lot!
-#          Use only for small set of passwords!!!
+# WARNING: Slows down generation a lot.
+#          Use only for small wordlists.
 def more_leet(word, character, replacement):
 	tmp = word
 	c = str(character)
@@ -207,7 +205,6 @@ def more_leet(word, character, replacement):
 			x = x[:k] + r + x[k+1:]
 			leetlist.append(x)	
 	
-	#leetlist = list(set(leetlist))
 	return leetlist
 
 
@@ -322,9 +319,10 @@ elif sys.argv[1] == '-w':
 					spechars.append(spec1+spec2+spec3)
 
 	randnum = raw_input("> Do you want to add some random numbers at the end of words? Y/[N]:").lower()
+	print "\033[1;31mWARNING:\033[1;m Select NO in the following if using or going to have huge worlists!"
 	leetmode = raw_input("> Leet mode? (i.e. leet = 1337) Y/[N]: ").lower()
 	if leetmode == "y":
-		print "\033[1;31mWARNING:\033[1;m Select NO in the following if using or going to have huge worlists!"
+		print "\033[1;31mWARNING:\033[1;m Seriously, select NO in the following if using or going to have huge worlists!"
 		advleet = raw_input("> Do you want to use more advanced leetspeaking (not only password => p455w0rd and P455w0rd)? Y/[N]: ").lower()
 
 
@@ -464,9 +462,10 @@ elif sys.argv[1] == '-i':
 					spechars.append(spec1+spec2+spec3)
 
 	randnum = raw_input("> Do you want to add some random numbers at the end of words? Y/[N]:").lower()
+	print "\033[1;31mWARNING:\033[1;m Select NO in the following if using or going to have huge worlists!"
 	leetmode = raw_input("> Leet mode? (i.e. leet = 1337) Y/[N]: ").lower()
 	if leetmode == "y":
-		print "\033[1;31mWARNING:\033[1;m Select NO in the following if using or going to have huge worlists!"
+		print "\033[1;31mWARNING:\033[1;m Seriously, select NO in the following if using or going to have huge worlists!"
 		advleet = raw_input("> Do you want to use more advanced leetspeaking (not only password => p455w0rd and P455w0rd)? Y/[N]: ").lower()
 
 
