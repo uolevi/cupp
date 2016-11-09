@@ -319,9 +319,10 @@ elif sys.argv[1] == '-w':
 					spechars.append(spec1+spec2+spec3)
 
 	
-	print "Years to be added: " + str(years)
-	addyears = raw_input("> Do you want to combine these years with words? Y/[N]:").lower()
-	randnum = raw_input("> Do you want to add some random numbers at the end of words? Y/[N]:").lower()
+	print "Years: " + str(years)
+	addyears = raw_input("> Do you want to add these years at the end of words? Y/[N]:").lower()
+	print "Random number range: " + str(numfrom) + "-" + str(numto) 
+	randnum = raw_input("> Do you want to add random numbers from this range at the end of words? Y/[N]:").lower()
 	print "\033[1;31mWARNING:\033[1;m Select NO in the following if using or going to have huge worlists!"
 	leetmode = raw_input("> Leet mode? (i.e. leet = 1337) Y/[N]: ").lower()
 	if leetmode == "y":
@@ -479,9 +480,13 @@ elif sys.argv[1] == '-i':
 				for spec3 in chars:
 					spechars.append(spec1+spec2+spec3)
 
+
+
+
 	print "Years to be added: " + str(years)
-	addyears = raw_input("> Do you want to combine these years with words? Y/[N]:").lower()
-	randnum = raw_input("> Do you want to add some random numbers at the end of words? Y/[N]:").lower()
+	addyears = raw_input("> Do you want to add these years at the end of words? Y/[N]:").lower()
+	print "Random number range: " + str(numfrom) + "-" + str(numto) 
+	randnum = raw_input("> Do you want to add random numbers from this range at the end of words? Y/[N]:").lower()
 	print "\033[1;31mWARNING:\033[1;m Select NO in the following if using or going to have huge worlists!"
 	leetmode = raw_input("> Leet mode? (i.e. leet = 1337) Y/[N]: ").lower()
 	if leetmode == "y":
