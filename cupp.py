@@ -318,6 +318,9 @@ elif sys.argv[1] == '-w':
 				for spec3 in chars:
 					spechars.append(spec1+spec2+spec3)
 
+	
+	print "Years to be added: " + str(years)
+	addyears = raw_input("> Do you want to combine these years with words? Y/[N]:").lower()
 	randnum = raw_input("> Do you want to add some random numbers at the end of words? Y/[N]:").lower()
 	print "\033[1;31mWARNING:\033[1;m Select NO in the following if using or going to have huge worlists!"
 	leetmode = raw_input("> Leet mode? (i.e. leet = 1337) Y/[N]: ").lower()
@@ -337,10 +340,14 @@ elif sys.argv[1] == '-w':
 	print "\r\n[+] Now making a dictionary..."
 
 
-	kombinacija1 = list(komb(listica, years))
-	kombinacija2 = ['']
-	if conts == "y":
-		kombinacija2 = list(komb(cont, years))
+	if addyears == "y":
+		kombinacija1 = list(komb(listica, years))
+		kombinacija2 = ['']
+		if conts == "y":
+			kombinacija2 = list(komb(cont, years))
+	else:
+		kombinacija1 = ['']
+		kombinacija2 = ['']
 	kombinacija3 = ['']
 	kombinacija4 = ['']
 	if spechars1 == "y":
@@ -472,6 +479,8 @@ elif sys.argv[1] == '-i':
 				for spec3 in chars:
 					spechars.append(spec1+spec2+spec3)
 
+	print "Years to be added: " + str(years)
+	addyears = raw_input("> Do you want to combine these years with words? Y/[N]:").lower()
 	randnum = raw_input("> Do you want to add some random numbers at the end of words? Y/[N]:").lower()
 	print "\033[1;31mWARNING:\033[1;m Select NO in the following if using or going to have huge worlists!"
 	leetmode = raw_input("> Leet mode? (i.e. leet = 1337) Y/[N]: ").lower()
@@ -640,22 +649,31 @@ elif sys.argv[1] == '-i':
 	komb2 += list(komb(kombinaaw, wbdss, "_"))
 	komb3 = list(komb(kombinaak, kbdss))
 	komb3 += list(komb(kombinaak, kbdss, "_"))
-	komb4 = list(komb(kombinaa, years))
-	komb4 += list(komb(kombinaa, years, "_"))
-	komb5 = list(komb(kombinaac, years))
-	komb5 += list(komb(kombinaac, years, "_"))
-	komb6 = list(komb(kombinaaw, years))
-	komb6 += list(komb(kombinaaw, years, "_"))
-	komb7 = list(komb(kombinaak, years))
-	komb7 += list(komb(kombinaak, years, "_"))
+	if addyears == "y":
+		komb4 = list(komb(kombinaa, years))
+		komb4 += list(komb(kombinaa, years, "_"))
+		komb5 = list(komb(kombinaac, years))
+		komb5 += list(komb(kombinaac, years, "_"))
+		komb6 = list(komb(kombinaaw, years))
+		komb6 += list(komb(kombinaaw, years, "_"))
+		komb7 = list(komb(kombinaak, years))
+		komb7 += list(komb(kombinaak, years, "_"))
+	else:
+		komb4 = ['']
+		komb5 = ['']
+		komb6 = ['']
+		komb7 = ['']
 	komb8 = list(komb(word, bdss))
 	komb8 += list(komb(word, bdss, "_"))
 	komb9 = list(komb(word, wbdss))
 	komb9 += list(komb(word, wbdss, "_"))
 	komb10 = list(komb(word, kbdss))
 	komb10 += list(komb(word, kbdss, "_"))
-	komb11 = list(komb(word, years))
-	komb11 += list(komb(word, years, "_"))
+	if addyears == "y":
+		komb11 = list(komb(word, years))
+		komb11 += list(komb(word, years, "_"))
+	else:
+		komb11 = ['']
 	komb12 = ['']
 	komb13 = ['']
 	komb14 = ['']
@@ -669,8 +687,11 @@ elif sys.argv[1] == '-i':
 		komb15 = list(concats(kombinaaw, numfrom, numto))
 		komb16 = list(concats(kombinaak, numfrom, numto))
 		komb21 = list(concats(reverse, numfrom, numto))
-	komb17 = list(komb(reverse, years))
-	komb17 += list(komb(reverse, years, "_"))
+	if addyears == "y":
+		komb17 = list(komb(reverse, years))
+		komb17 += list(komb(reverse, years, "_"))
+	else:
+		komb17 = ['']
 	komb18 = list(komb(rev_w, wbdss))
 	komb18 += list(komb(rev_w, wbdss, "_"))
 	komb19 = list(komb(rev_k, kbdss))
