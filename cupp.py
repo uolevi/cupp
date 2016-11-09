@@ -324,6 +324,17 @@ elif sys.argv[1] == '-w':
 	if leetmode == "y":
 		print "\033[1;31mWARNING:\033[1;m Seriously, select NO in the following if using or going to have huge worlists!"
 		advleet = raw_input("> Do you want to use more advanced leetspeaking (not only password => p455w0rd and P455w0rd)? Y/[N]: ").lower()
+	wcfromb = int(input("> Give min length for words (Default = " + str(wcfrom) + "): "))
+	wctob = int(input("> Give max length for words (Default = " + str(wcto) + "): "))
+	if wcfromb >= 0 and wcfromb <= wcto:
+		wcfrom = wcfromb
+	else:
+		print "\033[1;31mERROR in \033[1;m min value " + str(wcfromb) + ", using default one " + str(wcfrom) + " instead..."
+	if wctob >= 0 and wctob >= wcfrom:
+		wcto = wctob
+	else:
+		print "\033[1;31mERROR in \033[1;m max value " + str(wctob) + ", using default one " + str(wcto) + " instead..."		
+	print "\r\n[+] Now making a dictionary..."
 
 
 	kombinacija1 = list(komb(listica, years))
@@ -392,8 +403,8 @@ elif sys.argv[1] == '-w':
 
 	print_to_file(sys.argv[2]+'.cupp.txt', unique_list_finished)
 	
-	print "[+] See if there are too many duplicates by using 'sort " + sys.argv[2] + ".cupp.txt | uniq -cd | sort -n'"
-	print "[+] Remove duplicates manually by using 'sort -u " + sys.argv[2] + ".cupp.txt > newfile.txt'"
+	print "[+] See if there are too many duplicates: 'sort " + sys.argv[2] + ".cupp.txt | uniq -cd | sort -n'"	
+	print "[+] If needed, remove duplicates:      'sort -u " + sys.argv[2] + ".cupp.txt > newfile.txt'"
 
 	fajl.close()
 	exit()
@@ -465,10 +476,18 @@ elif sys.argv[1] == '-i':
 	print "\033[1;31mWARNING:\033[1;m Select NO in the following if using or going to have huge worlists!"
 	leetmode = raw_input("> Leet mode? (i.e. leet = 1337) Y/[N]: ").lower()
 	if leetmode == "y":
-		print "\033[1;31mWARNING:\033[1;m Seriously, select NO in the following if using or going to have huge worlists!"
+		print "\033[1;31mWARNING:\033[1;m Seriously, select NO in the following if using or going to have huge wordlists!"
 		advleet = raw_input("> Do you want to use more advanced leetspeaking (not only password => p455w0rd and P455w0rd)? Y/[N]: ").lower()
-
-
+	wcfromb = int(input("> Give min length for words (Default = " + str(wcfrom) + "): "))
+	wctob = int(input("> Give max length for words (Default = " + str(wcto) + "): "))
+	if wcfromb >= 0 and wcfromb <= wcto:
+		wcfrom = wcfromb
+	else:
+		print "\033[1;31mERROR in \033[1;m min value " + str(wcfromb) + ", using default one " + str(wcfrom) + " instead..."
+	if wctob >= 0 and wctob >= wcfrom:
+		wcto = wctob
+	else:
+		print "\033[1;31mERROR in \033[1;m max value " + str(wctob) + ", using default one " + str(wcto) + " instead..."		
 	print "\r\n[+] Now making a dictionary..."
 
 
@@ -735,15 +754,15 @@ elif sys.argv[1] == '-i':
 		print "[+] Sorting leet list and removing duplicates..."
 		unique_leet = dict.fromkeys(leet_list).keys()
 	
-	unique_list = unique_lista + unique_leet
+	unique_list = unique_lista + leet_list
 
 	unique_list_finished = []
 	unique_list_finished = [x for x in unique_list if len(x) < wcto and len(x) > wcfrom]
 	
 	print_to_file(name+'.txt', unique_list_finished)
 
-	print "[+] See if there are too many duplicates by using 'sort " + name + ".txt | uniq -cd | sort -n'"	
-	print "[+] Remove duplicates manually by using 'sort -u " + name + ".txt > newfile.txt'"
+	print "[+] See if there are too many duplicates: 'sort " + name + ".txt | uniq -cd | sort -n'"	
+	print "[+] If needed, remove duplicates:         'sort -u " + name + ".txt > newfile.txt'"
 	
 	exit()
 	
